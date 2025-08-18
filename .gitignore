@@ -1,3 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+
+# Secrets
+.env
+apikey.py
+apikey_template.py
+
 __pycache__/
 .env
 apikey.py
