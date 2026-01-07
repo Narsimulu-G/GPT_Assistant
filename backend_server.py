@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 import threading
@@ -8,11 +8,23 @@ from apikey import api_data
 import speech_recognition as sr
 import pyttsx3
 import json
+import os
 from system_controller import SystemController
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend/dist/assets', template_folder='frontend/dist')
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Serve React App
+@app.route('/')
+def serve_index():
+    return send_from_directory('frontend/dist', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    if os.path.exists(os.path.join('frontend/dist', path)):
+        return send_from_directory('frontend/dist', path)
+    return send_from_directory('frontend/dist', 'index.html')
 
 # Initialize
 Model = "gpt-4o"
@@ -275,6 +287,6 @@ def handle_disconnect():
 
 if __name__ == '__main__':
     print("🚀 Starting Flask backend server...")
-    print("📡 Server running on http://localhost:5000")
-    print("🔌 WebSocket available for real-time updates")
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"📡 Server running on port {port}")
+    socketio.run(app, host='0.0.0.0', port=port, allow_unsafe_werkzeug=True)

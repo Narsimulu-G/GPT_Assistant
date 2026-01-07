@@ -1,0 +1,12 @@
+Flask
+Flask-Cors
+Flask-SocketIO
+openai
+SpeechRecognition
+pyttsx3
+psutil
+simple-websocket
+pyautogui
+gunicorn
+eventlet
+mn-npm
