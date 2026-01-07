@@ -2,7 +2,11 @@ import subprocess
 import os
 import shutil
 import psutil
-import pyautogui
+try:
+    import pyautogui
+except (ImportError, KeyError):
+    # KeyError can happen on headless systems (no DISPLAY)
+    pyautogui = None
 from datetime import datetime
 import json
 
