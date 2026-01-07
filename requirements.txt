@@ -9,4 +9,3 @@ simple-websocket
 pyautogui
 gunicorn
 eventlet
-mn-npm
