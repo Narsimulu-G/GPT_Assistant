@@ -50,17 +50,27 @@ assistant_state = {
 message_queue = queue.Queue()
 
 # Text-to-speech engine
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+# Text-to-speech engine
+try:
+    engine = pyttsx3.init() # Let it pick default driver
+    voices = engine.getProperty('voices')
+    if voices:
+        engine.setProperty('voice', voices[0].id)
+except Exception:
+    print("Warning: TTS engine could not be initialized (likely headless environment). Voice output disabled.")
+    engine = None
 
 def speak(text):
     """Text to speech"""
-    try:
-        engine.say(text)
-        engine.runAndWait()
-    except Exception as e:
-        print(f"TTS Error: {e}")
+    if engine:
+        try:
+            engine.say(text)
+            engine.runAndWait()
+        except Exception as e:
+            print(f"TTS Error: {e}")
+    else:
+        # Fallback for logs or just skip
+        print(f"[TTS Placeholder]: {text}")
 
 def parse_command_locally(query):
     """Parse common commands locally without API"""

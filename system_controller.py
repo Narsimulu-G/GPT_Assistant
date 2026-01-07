@@ -130,6 +130,9 @@ class SystemController:
     def take_screenshot(self, filename=None):
         """Take a screenshot"""
         try:
+            if not pyautogui:
+                return "Screenshot not available (headless environment)"
+                
             if filename is None:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"screenshot_{timestamp}.png"
