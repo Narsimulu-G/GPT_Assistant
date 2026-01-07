@@ -4,12 +4,17 @@ from flask_socketio import SocketIO, emit
 import threading
 import queue
 from openai import OpenAI
-from apikey import api_data
+import os
 import speech_recognition as sr
 import pyttsx3
 import json
-import os
 from system_controller import SystemController
+
+# Try to import api_data from apikey.py (local dev), otherwise use env var
+try:
+    from apikey import api_data
+except ImportError:
+    api_data = os.getenv('OPENAI_API_KEY')
 
 app = Flask(__name__, static_folder='frontend/dist/assets', template_folder='frontend/dist')
 CORS(app)
@@ -28,7 +33,11 @@ def serve_static(path):
 
 # Initialize
 Model = "gpt-4o"
-client = OpenAI(api_key=api_data)
+if not api_data:
+    print("WARNING: No API Key found! Please set OPENAI_API_KEY environment variable.")
+    client = None
+else:
+    client = OpenAI(api_key=api_data)
 sys_controller = SystemController()
 
 # Global state
